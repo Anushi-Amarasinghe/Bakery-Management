@@ -5,6 +5,16 @@
  */
 package View;
 
+import Model.DB;
+import java.awt.print.PrinterException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import net.proteanit.sql.DbUtils;
+
 /**
  *
  * @author user
@@ -16,6 +26,8 @@ public class ManageShopShipingDetails extends javax.swing.JFrame {
      */
     public ManageShopShipingDetails() {
         initComponents();
+        autoId();
+        DisplayTable();
     }
 
     /**
@@ -235,6 +247,11 @@ public class ManageShopShipingDetails extends javax.swing.JFrame {
         jButton18.setForeground(new java.awt.Color(0, 102, 153));
         jButton18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-add-30.png"))); // NOI18N
         jButton18.setText("Add Details");
+        jButton18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton18ActionPerformed(evt);
+            }
+        });
 
         jButton11.setBackground(new java.awt.Color(255, 255, 255));
         jButton11.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -263,12 +280,22 @@ public class ManageShopShipingDetails extends javax.swing.JFrame {
         jButton20.setForeground(new java.awt.Color(255, 255, 255));
         jButton20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-print-30.png"))); // NOI18N
         jButton20.setText("Print Details");
+        jButton20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton20ActionPerformed(evt);
+            }
+        });
 
         jButton22.setBackground(new java.awt.Color(255, 255, 255));
         jButton22.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jButton22.setForeground(new java.awt.Color(0, 102, 153));
         jButton22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-search-bar-30.png"))); // NOI18N
         jButton22.setText("Search");
+        jButton22.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton22ActionPerformed(evt);
+            }
+        });
 
         jButtonReset3.setBackground(new java.awt.Color(204, 204, 204));
         jButtonReset3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -513,8 +540,85 @@ public class ManageShopShipingDetails extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void autoId(){
+        try {
+            Connection con;    
+            con = DB.createsConnection();
+            String sql="SELECT * FROM `shop`";        
+            PreparedStatement  ps=con.prepareStatement(sql);
+            ResultSet rs=ps.executeQuery();
+            rs.last(); // cursor will go to last row
+            int row_count = rs.getRow(); // assign number of rows  to row_count variable
+            String new_count = String.valueOf(row_count + 1); // increamet by 1
+            int length = new_count.length(); // get new count length 
+            String new_Ing_Number ="" ; // this is declare for assign new ing number
+             
+            if(length == 4 ){
+                new_Ing_Number = "SHOP" + new_count;
+            }
+            else if(length == 3 ){
+                new_Ing_Number = "SHOP0" + new_count;
+            }
+            else if(length == 2 ){
+                new_Ing_Number = "SHOP00" + new_count;
+            }
+            else if(length == 1 ){
+                new_Ing_Number = "SHOP000" + new_count;
+            }
+            jTextFieldIngreNumber5.setText(new_Ing_Number);    
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, e);
+        }
+    }
+    public void DisplayTable(){
+        try{
+            Connection con;
+            PreparedStatement ps;
+            ResultSet rs;
+            con = DB.createsConnection();
+            String Display="SELECT * FROM `shop`";
+            ps=con.prepareStatement(Display);
+            rs=ps.executeQuery();
+            jTable4.setModel(DbUtils.resultSetToTableModel(rs));
+           
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        // TODO add your handling code here:
+        String shopId= jTextFieldIngreNumber5.getText();
+        String shopLoc= jTextFieldIngreNumber9.getText();
+        String shopname=jTextFieldIngreNumber7.getText();
+        String shoppMobile=jTextFieldIngreNumber8.getText();
+        String sql="UPDATE `shop` SET `ShopName` = ?, `Mobile` = ?, `Location` = ? WHERE `shop`.`ShopId` = ?;";
+        Connection con;
+        PreparedStatement ps;
+        try {
+            con = DB.createsConnection();
+            ps=con.prepareStatement(sql);
+            ps.setString(1, shopname);
+            ps.setString(2, shoppMobile);
+            ps.setString(3, shopLoc);
+            ps.setString(4, shopId);
+            int i=ps.executeUpdate();
+            if (i>0){
+                JOptionPane.showMessageDialog(null, "Data is updated");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Data is not updated");   
+            }  
+            autoId();
+            jTextFieldIngreNumber7.setText("");
+            jTextFieldIngreNumber8.setText("");
+            jTextFieldIngreNumber9.setText(""); 
+            DisplayTable();
+            
+           
+        } catch (Exception ex) {
+            Logger.getLogger(ManageProducts.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
@@ -544,6 +648,76 @@ public class ManageShopShipingDetails extends javax.swing.JFrame {
     private void jTextFieldIngreNumber9jTextFieldIngreNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIngreNumber9jTextFieldIngreNumberActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldIngreNumber9jTextFieldIngreNumberActionPerformed
+
+    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
+        String shopId= jTextFieldIngreNumber5.getText();
+        String shopName = jTextFieldIngreNumber7.getText();
+        String shopMobile=jTextFieldIngreNumber8.getText();
+        String shopLoc= jTextFieldIngreNumber9.getText();
+        Connection con;
+        String AddIngrename="INSERT INTO `shop` (`ShopId`, `ShopName`, `Mobile`, `Location`) VALUES (?, '?, ?, ?);";
+        try {
+            con = DB.createsConnection();
+            PreparedStatement st =con.prepareStatement(AddIngrename);
+            st.setString(1, shopId);
+            st.setString(2, shopName);
+            st.setString(3, shopMobile);
+            st.setString(4, shopLoc);
+            int i=st.executeUpdate();
+            if (i>0){
+                JOptionPane.showMessageDialog(null, "Supplier Registerd sucsesful");
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Supplier Registerd fail ");   
+            }
+            autoId();
+            jTextFieldIngreNumber7.setText("");
+            jTextFieldIngreNumber8.setText("");
+            jTextFieldIngreNumber9.setText("");
+            DisplayTable();
+        }        
+        catch (Exception ex) { 
+            Logger.getLogger(ManageProducts.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton18ActionPerformed
+
+    private void jButton22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton22ActionPerformed
+        String shopid=jTextField4.getText();
+        String sql="SELECT * FROM `shop` WHERE ShopId=?";
+        Connection con;
+        PreparedStatement ps;
+        try {
+            con = DB.createsConnection();
+            ps=con.prepareStatement(sql);
+            ps.setString(1,shopid);
+            ResultSet rs=ps.executeQuery();
+            if(rs.next())
+            {
+                jTextFieldIngreNumber5.setText(shopid);
+                jTextFieldIngreNumber7.setText(rs.getString("ShopName"));
+                jTextFieldIngreNumber8.setText(rs.getString("Mobile"));
+                jTextFieldIngreNumber9.setText(rs.getString("Location"));
+            }
+            else
+            {
+                
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ManageProducts.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton22ActionPerformed
+
+    private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
+        try {
+            boolean print= jTable4.print();
+            if(!print){
+                JOptionPane.showMessageDialog(null, "Unable to Print! ");
+            }
+        } catch (PrinterException ex) {
+             JOptionPane.showMessageDialog(null, ex.getMessage());
+            
+        }
+    }//GEN-LAST:event_jButton20ActionPerformed
 
     /**
      * @param args the command line arguments

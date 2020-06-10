@@ -25,7 +25,6 @@ public class ManageProducts extends javax.swing.JFrame {
      */
     public ManageProducts() {
         initComponents();
-        
         autoId();
         FillCombo();
         
@@ -276,7 +275,7 @@ public class ManageProducts extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -664,6 +663,11 @@ public class ManageProducts extends javax.swing.JFrame {
         jButtonIngreSearch.setForeground(new java.awt.Color(0, 102, 153));
         jButtonIngreSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-search-bar-30.png"))); // NOI18N
         jButtonIngreSearch.setText("Search");
+        jButtonIngreSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonIngreSearchActionPerformed(evt);
+            }
+        });
 
         jButtonViewIngreList.setBackground(new java.awt.Color(0, 0, 51));
         jButtonViewIngreList.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -761,7 +765,7 @@ public class ManageProducts extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel7Layout.createSequentialGroup()
-                    .addContainerGap(1185, Short.MAX_VALUE)
+                    .addContainerGap(1186, Short.MAX_VALUE)
                     .addComponent(jLabel35)
                     .addGap(18, 18, 18)
                     .addComponent(jLabel36)
@@ -944,7 +948,7 @@ public class ManageProducts extends javax.swing.JFrame {
              else if(length == 1 ){
                  new_Ing_Number = "ING000" + new_count;
              }
-            jTextFieldIngreNumber.setText(new_Ing_Number);
+            jTextFieldIngreNumber5.setText(new_Ing_Number);
              
          } catch (Exception e) {
         JOptionPane.showMessageDialog(rootPane, e);
@@ -1094,9 +1098,9 @@ public class ManageProducts extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButtonAddIngreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddIngreActionPerformed
-         String Ingre_number= jTextFieldIngreNumber.getText();
-         String Ing_name = jTextFieldIngName.getText();
-         String discription= jTextFieldIngDiscription.getText();
+        String Ingre_number= jTextFieldIngreNumber.getText();
+        String Ing_name = jTextFieldIngName.getText();
+        String discription= jTextFieldIngDiscription.getText();
         Connection con;
         String AddIngrename="INSERT INTO ingredientName(Ingrenumber,ingrename,discription) VALUES (?,?,?)";
         
@@ -1174,6 +1178,10 @@ public class ManageProducts extends javax.swing.JFrame {
     private void jComboBoxNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxNameActionPerformed
+
+    private void jButtonIngreSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonIngreSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonIngreSearchActionPerformed
 
     /**
      * @param args the command line arguments
